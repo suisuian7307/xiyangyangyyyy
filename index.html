@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>李兵艳 · 生态学 · 个人简历</title>
+<style>
+  :root{
+    --green-deep:#1d4d3b;
+    --green-mid:#3f7d5c;
+    --green-sage:#a8cdae;
+    --green-mint:#e6f4ea;
+    --green-light:#f2f9f0;
+    --gold:#c9a85e;
+    --ink:#22302a;
+    --paper:#fbfdf8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Georgia","Times New Roman","Songti SC","STSong","SimSun",serif;
+    background:var(--green-light);
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+  /* ---------- 装饰质感背景 ---------- */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background:
+      radial-gradient(1200px 600px at 85% -5%, rgba(168,205,174,.40), transparent 60%),
+      radial-gradient(900px 500px at -5% 110%, rgba(63,125,92,.16), transparent 60%);
+    pointer-events:none;z-index:0;
+  }
+  .grain{
+    position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background-image:repeating-linear-gradient(45deg, rgba(29,77,59,.02) 0 1px, transparent 1px 3px);
+  }
+
+  /* ---------- 封面 ---------- */
+  .cover{
+    position:relative;z-index:1;
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;color:#123;
+    overflow:hidden;
+  }
+  .cover-bg{
+    position:absolute;inset:-10px;z-index:-1;
+    background:url("photo9.jpg") center/cover no-repeat;
+    filter:blur(2px) saturate(.9) brightness(.55);
+    animation:kenburns 26s ease-in-out infinite alternate;
+  }
+  .cover-tint{
+    position:absolute;inset:0;z-index:-1;
+    background:linear-gradient(160deg, rgba(230,244,234,.88) 0%, rgba(231,247,231,.55) 45%, rgba(29,77,59,.35) 100%);
+  }
+  @keyframes kenburns{
+    from{transform:scale(1) translateY(0);}
+    to{transform:scale(1.12) translateY(-2%);}
+  }
+  .cover .name{
+    font-size:clamp(44px,9vw,96px);
+    letter-spacing:.32em;text-indent:.32em;
+    font-weight:700;color:var(--green-deep);
+    text-shadow:0 2px 24px rgba(255,255,255,.6);
+    animation:rise 1.4s ease both;
+  }
+  .cover .role{
+    margin-top:18px;
+    font-size:clamp(15px,2.4vw,22px);
+    letter-spacing:.55em;text-indent:.55em;
+    color:var(--green-mid);
+    animation:rise 1.4s ease .25s both;
+  }
+  .cover .divider{
+    margin:26px auto;
+    width:min(220px,60%);
+    height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    animation:fadeIn 1.6s ease .5s both;
+  }
+  .cover .contact{
+    display:flex;flex-wrap:wrap;gap:14px 30px;justify-content:center;
+    font-size:clamp(13px,1.8vw,17px);letter-spacing:.08em;
+    color:var(--ink);
+    animation:rise 1.4s ease .6s both;
+  }
+  .cover .contact span{display:flex;align-items:center;gap:8px;}
+  .cover .scroll-hint{
+    position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+    font-size:13px;letter-spacing:.3em;color:rgba(29,77,59,.8);
+    animation:bobble 2.2s ease-in-out infinite;
+  }
+  .scroll-hint .arrow{display:block;font-size:20px;margin-top:6px;}
+  @keyframes bobble{0%,100%{transform:translate(-50%,0);opacity:.6;}50%{transform:translate(-50%,8px);opacity:1;}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ---------- 大头照 ---------- */
+  .avatar-wrap{animation:rise 1.4s ease .15s both;margin-bottom:26px;}
+  .avatar{
+    width:clamp(110px,16vw,150px);height:clamp(110px,16vw,150px);
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid rgba(255,255,255,.85);
+    box-shadow:0 8px 30px rgba(29,77,59,.35);
+  }
+
+  /* ---------- 主容器 / 书页 ---------- */
+  .book{
+    position:relative;z-index:1;
+    max-width:980px;
+    margin:-60px auto 0;
+    padding:0 20px 90px;
+  }
+  .page{
+    background:var(--paper);
+    border-radius:22px;
+    box-shadow:0 30px 70px rgba(29,77,59,.16);
+    padding:clamp(28px,5vw,56px);
+    margin-bottom:54px;
+    position:relative;
+    transition:none;
+    /* 翻阅开合动效 */
+    opacity:0;
+    transform:perspective(1400px) rotateY(-12deg) translateX(-30px);
+    transform-origin:left center;
+  }
+  .page.reveal{
+    opacity:1;
+    transform:perspective(1400px) rotateY(0deg) translateX(0);
+    transition:opacity .9s ease, transform .9s cubic-bezier(.22,.61,.36,1);
+  }
+  /* 书脊折痕 */
+  .page::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:46px;
+    border-radius:22px 0 0 22px;
+    background:linear-gradient(90deg, rgba(29,77,59,.12), rgba(29,77,59,0));
+    pointer-events:none;
+  }
+  .page::after{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:6px;
+    background:linear-gradient(90deg,rgba(29,77,59,.4),transparent);
+    pointer-events:none;
+  }
+  .page h2{
+    display:flex;align-items:center;gap:14px;
+    font-family:Georgia,serif;
+    letter-spacing:.12em;
+    color:var(--green-deep);
+    font-size:clamp(22px,3.4vw,30px);
+    margin-bottom:24px;
+  }
+  .page h2 .en{
+    font-size:.5em;letter-spacing:.25em;color:var(--gold);font-weight:500;margin-left:auto;
+  }
+  .page h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--green-sage),transparent);}
+
+  .item{margin-bottom:22px;}
+  .item:last-child{margin-bottom:0;}
+  .item-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin-bottom:8px;}
+  .item-title{font-weight:700;color:var(--green-deep);font-size:1.08em;}
+  .item-sub{color:var(--green-mid);font-size:.92em;letter-spacing:.04em;}
+  .item-tag{margin-left:auto;font-size:.78em;color:var(--gold);white-space:nowrap;}
+  .item p,.item li{line-height:1.9;color:var(--ink);font-size:.98em;}
+  ul.tight{list-style:none;padding-left:0;}
+  ul.tight li{padding-left:20px;position:relative;line-height:1.9;}
+  ul.tight li::before{content:"◆";position:absolute;left:0;top:.1em;font-size:.7em;color:var(--gold);}
+
+  /* 双栏技能 */
+  .skills{
+    display:grid;grid-template-columns:1fr 1fr;gap:18px;
+  }
+  .skill-card{
+    background:var(--green-light);
+    border:1px solid rgba(63,125,92,.18);
+    border-left:4px solid var(--green-mid);
+    border-radius:12px;padding:16px 18px;
+    transition:transform .35s ease, box-shadow .35s ease;
+  }
+  .skill-card:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(29,77,59,.14);}
+  .skill-card h4{color:var(--green-deep);font-size:1em;margin-bottom:8px;letter-spacing:.06em;}
+  .skill-card p{font-size:.9em;line-height:1.7;}
+  .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .badge{
+    font-size:.72em;letter-spacing:.05em;color:var(--green-deep);
+    background:rgba(168,205,174,.35);
+    border:1px solid rgba(63,125,92,.3);
+    border-radius:999px;padding:3px 12px;
+  }
+
+  /* 证书墙 */
+  .certs{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px;}
+  .cert-card{
+    background:#fff;border-radius:14px;overflow:hidden;
+    border:1px solid rgba(63,125,92,.16);
+    box-shadow:0 8px 20px rgba(29,77,59,.10);
+    transition:transform .4s ease, box-shadow .4s ease;
+  }
+  .cert-card:hover{transform:translateY(-6px) rotate(-1deg);box-shadow:0 18px 40px rgba(29,77,59,.22);}
+  .cert-card img{width:100%;height:130px;object-fit:cover;display:block;filter:saturate(.98);}
+  .cert-card .cap{
+    padding:10px 12px;font-size:.78em;letter-spacing:.04em;
+    color:var(--green-deep);text-align:center;background:var(--green-light);
+  }
+
+  /* 相册/风景墙 */
+  .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;}
+  .photo-frame{
+    position:relative;border-radius:14px;overflow:hidden;cursor:pointer;
+    box-shadow:0 10px 26px rgba(29,77,59,.15);
+    transform:rotate(-1deg);
+    transition:transform .5s ease, box-shadow .5s ease;
+  }
+  .photo-frame:nth-child(even){transform:rotate(1.4deg);}
+  .photo-frame:hover{transform:rotate(0) scale(1.03);z-index:2;box-shadow:0 20px 44px rgba(29,77,59,.28);}
+  .photo-frame img{width:100%;height:170px;object-fit:cover;display:block;}
+  .photo-frame .cap{
+    position:absolute;left:0;right:0;bottom:0;
+    padding:8px;font-size:.72em;letter-spacing:.1em;color:#fff;
+    background:linear-gradient(transparent,rgba(29,77,59,.85));
+    text-align:center;
+  }
+  .monument{
+    display:grid;grid-template-columns:1fr 1.4fr;gap:22px;align-items:center;
+  }
+  .monument .imgs{display:flex;flex-direction:column;gap:14px;}
+  .monument .imgs img{width:100%;border-radius:14px;object-fit:cover;box-shadow:0 10px 24px rgba(29,77,59,.18);border:1px solid rgba(255,255,255,.8);}
+  .monument .imgs img:first-child{height:150px;}
+  .monument .imgs img:last-child{height:180px;}
+
+  /* 风景引首在大节上方做分隔 */
+  .banner{
+    position:relative;border-radius:18px;overflow:hidden;margin:6px 0 4px;
+    box-shadow:0 12px 30px rgba(29,77,59,.18);
+  }
+  .banner img{width:100%;height:clamp(150px,26vw,230px);object-fit:cover;display:block;filter:brightness(.92);}
+  .banner .txt{
+    position:absolute;left:0;right:0;bottom:0;padding:22px;
+    background:linear-gradient(transparent,rgba(22,50,38,.82));
+    color:#fff;letter-spacing:.18em;font-size:.8em;
+  }
+
+  .footer{
+    text-align:center;color:var(--green-mid);letter-spacing:.3em;
+    font-size:12px;margin-top:10px;opacity:.7;
+  }
+
+  .frame-lightbox{
+    display:none;position:fixed;inset:0;z-index:99;
+    background:rgba(12,25,19,.88);
+    align-items:center;justify-content:center;cursor:zoom-out;
+  }
+  .frame-lightbox img{max-width:90vw;max-height:88vh;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
+  .frame-lightbox.show{display:flex;animation:fadeIn .3s ease;}
+
+  @media(max-width:720px){
+    .skills{grid-template-columns:1fr;}
+    .monument{grid-template-columns:1fr;}
+    .page h2 .en{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<!-- ================= 封面 ================= -->
+<section class="cover">
+  <div class="cover-tint"></div>
+  <div class="cover-bg"></div>
+
+  <div class="avatar-wrap">
+    <img class="avatar" src="photo1.jpg" alt="大头照">
+  </div>
+
+  <h1 class="name">李兵艳</h1>
+  <div class="role">生 态 学 · 自 然 观 察 · AI 数 据 技 术</div>
+  <div class="divider"></div>
+  <div class="contact">
+    <span>☎ 166 8694 7307</span>
+    <span>✉ suisuian_0810@qq.com</span>
+  </div>
+  <div class="scroll-hint">向下翻阅 <span class="arrow">▾</span></div>
+</section>
+
+<!-- ================= 正文书卷 ================= -->
+<main class="book">
+
+  <!-- 风景 7 -->
+  <div class="banner stage">
+    <img src="photo7.jpg" alt="风景">
+    <div class="txt">厚 于 自 然 ， 融 于 山 川</div>
+  </div>
+
+  <!-- 个人简介 -->
+  <section class="page stage">
+    <h2>个人简介 <span class="en">PROFILE</span></h2>
+    <p>福建师范大学地理科学学院、碳中和未来技术学院生态学专业在读本科生。具备达摩院、阿里云等头部企业的人工智能专项认证背景，拥有扎实的计算机基础应用能力。兼具理科生的逻辑思维与对自然科学的深厚热忱，具备强烈的社会责任感与团队协作精神。</p>
+  </section>
+
+  <!-- 风景 10 -->
+  <div class="banner stage">
+    <img src="photo10.jpg" alt="风景">
+    <div class="txt">观 微 知 著 · 守 望 生 态</div>
+  </div>
+
+  <!-- 教育背景 -->
+  <section class="page stage">
+    <h2>教育背景 <span class="en">EDUCATION</span></h2>
+    <div class="item">
+      <div class="item-head">
+        <span class="item-title">福建师范大学</span>
+        <span class="item-sub">地理科学学院 · 碳中和未来技术学院 · 生态学专业</span>
+        <span class="item-tag">本科在读 · 2026 — 2030</span>
+      </div>
+      <ul class="tight">
+        <li>主攻生态学基础理论、碳中和相关背景知识、自然生态系统观察与分析。</li>
+      </ul>
+    </div>
+    <div class="item">
+      <div class="item-head">
+        <span class="item-title">贵州省大方县第一中学</span>
+        <span class="item-sub">高中</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 风景 8 -->
+  <div class="banner stage">
+    <img src="photo8.jpg" alt="风景">
+    <div class="txt">以 AI 之眼 ， 见 万 物 生 息</div>
+  </div>
+
+  <!-- 专业方向与技能 -->
+  <section class="page stage">
+    <h2>专业方向与技能 <span class="en">SKILLS</span></h2>
+    <div class="skills">
+      <div class="skill-card">
+        <h4>专业方向（主修）</h4>
+        <p>生态学基础理论、碳中和相关背景知识、自然生态系统观察与分析。</p>
+      </div>
+      <div class="skill-card">
+        <h4>办公与呈现</h4>
+        <p>熟练使用 Office（Word / Excel / PowerPoint）；正在系统学习信息可视化与 PPT 高级排版，侧重于科研数据展示与学术内容呈现。</p>
+        <div class="badge-row"><span class="badge">Word</span><span class="badge">Excel</span><span class="badge">PowerPoint</span><span class="badge">信息可视化</span></div>
+      </div>
+      <div class="skill-card" style="grid-column:1/-1;">
+        <h4>AI 与数据认证</h4>
+        <div class="badge-row">
+          <span class="badge">达摩院 人工智能训练师认证</span>
+          <span class="badge">阿里云 Apsara Clouder 专项技能</span>
+          <span class="badge">AI4SCup Python 基础能力</span>
+        </div>
+        <p style="margin-top:10px;">具备 AI 模型训练与数据处理基础、云端技术应用基础，掌握 Python 基础编程与逻辑思维。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 社会实践与校园经历 -->
+  <section class="page stage">
+    <h2>社会实践与校园经历 <span class="en">EXPERIENCE</span></h2>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="item-title">校园大型赛事志愿者</span>
+        <span class="item-sub">校级运动会</span>
+      </div>
+      <p>负责赛事现场的统筹协助与志愿服务工作，保障赛事各项环节顺利推进，积累了良好的现场应变与团队协作能力。</p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="item-title">县级大型赛事演职人员</span>
+        <span class="item-sub">县级运动会开幕式</span>
+      </div>
+      <p>参与开幕式大型团体节目的编排与现场表演，具备优秀的团队配合意识与集体荣誉感。</p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="item-title">爱国主义教育实践参与者</span>
+        <span class="item-sub">烈士陵园祭扫活动</span>
+      </div>
+      <p>参与学校组织的红色教育实践，深入了解革命历史，体悟先烈奉献精神，进一步树立了强烈的青年责任意识与社会担当。</p>
+      <!-- 烈士陵园照片 -->
+      <div class="monument" style="margin-top:16px;">
+        <div class="imgs">
+          <img src="photo15.jpg" alt="烈士陵园" class="zoombox">
+          <img src="photo17.jpg" alt="烈士陵园" class="zoombox">
+        </div>
+        <div>
+          <strong style="color:var(--green-deep);letter-spacing:.06em;">铭记历史 · 砥砺前行</strong>
+          <p style="margin-top:8px;">在一次次的红色教育实践中不断筑牢理想信念，在庄严肃穆的氛围中体会革命先烈的不朽精神，让责任与担当内化于心、外化于行。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 风景 9 banner（呼应封面，可作氛围） -->
+  <div class="banner stage" style="display:none;">
+    <img src="photo9.jpg" alt="风景">
+    <div class="txt">学 于 山 野 · 报 于 山 河</div>
+  </div>
+
+  <!-- 获奖与证书 + 证书墙 -->
+  <section class="page stage">
+    <h2>获奖与证书 <span class="en">CREDENTIALS</span></h2>
+    <ul class="tight" style="margin-bottom:22px;">
+      <li>达摩院 人工智能训练师认证 · 2025</li>
+      <li>阿里云 Apsara Clouder 专项技能认证（AI 专项）· 2025</li>
+      <li>AI4SCup Python 基础能力认证 · 2025</li>
+    </ul>
+    <div class="certs">
+      <div class="cert-card"><img src="photo11.jpg" alt="AI证书" class="zoombox"><div class="cap">AI · Certificate</div></div>
+      <div class="cert-card"><img src="photo12.jpg" alt="AI证书" class="zoombox"><div class="cap">AI · Certificate</div></div>
+      <div class="cert-card"><img src="photo13.jpg" alt="AI证书" class="zoombox"><div class="cap">AI · Certificate</div></div>
+      <div class="cert-card"><img src="photo14.jpg" alt="AI证书" class="zoombox"><div class="cap">AI · Certificate</div></div>
+      <div class="cert-card"><img src="photo16.jpg" alt="AI证书" class="zoombox"><div class="cap">AI · Certificate</div></div>
+    </div>
+  </section>
+
+  <!-- 风景 9 结尾 -->
+  <div class="banner stage">
+    <img src="photo9.jpg" alt="风景">
+    <div class="txt">心 之所向 · 素 履 以往</div>
+  </div>
+
+  <!-- 自我评价 -->
+  <section class="page stage">
+    <h2>自我评价 <span class="en">SELF-EVALUATION</span></h2>
+    <div class="item">
+      <p><strong style="color:var(--green-deep);">专业契合度：</strong>生态学专业的学习培养了我严谨的科学态度与宏观的生态视野。热爱大自然，习惯在自然观察中沉淀自我，具备出色的独立思考能力与专注力，对生态环保与碳中和领域保持高度热情。</p>
+    </div>
+    <div class="item">
+      <p><strong style="color:var(--green-deep);">职业素养：</strong>做事严谨负责，具备高度执行力与担当精神；为人真诚，乐于助人，具备优秀的沟通协调能力与亲和力，能迅速融入团队。</p>
+    </div>
+    <div class="item">
+      <p><strong style="color:var(--green-deep);">成长导向：</strong>保持持续学习的心态，目前在夯实 AI 与 Python 基础的同时，正通过系统学习 PPT 演示技巧，努力提升自身在科研成果汇报、项目展示等方面的综合软实力。</p>
+    </div>
+  </section>
+
+  <div class="footer">感 谢 浏 览 · 期 待 合 作</div>
+</main>
+
+<!-- 图片放大灯箱 -->
+<div class="frame-lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="放大">
+</div>
+
+<script>
+  // 翻阅式滚动入场
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('reveal');
+        observer.unobserve(e.target);
+      }
+    });
+  },{threshold:0.12});
+  document.querySelectorAll('.stage').forEach(el=>observer.observe(el));
+
+  // 图片点击放大
+  const lightbox=document.getElementById('lightbox');
+  const lightboxImg=document.getElementById('lightbox-img');
+  document.addEventListener('click',function(ev){
+    if(ev.target.classList.contains('zoombox')){
+      lightboxImg.src=ev.target.src;
+      lightbox.classList.add('show');
+    }
+  });
+  lightbox.addEventListener('click',()=>lightbox.classList.remove('show'));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')lightbox.classList.remove('show');});
+</script>
+</body>
+</html>
